@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext"; // Ajustá la ruta si es distinta
 import ItemCount from "../ItemCount";
 
 const ItemDetail = ({ producto }) => {
-    const [cantidadAgregada, setCantidadAgregada] = useState(0);
+    const { addItem } = useCart();
+    const [agregado, setAgregado] = useState(false);
 
     const handleAdd = (cantidad) => {
-        setCantidadAgregada(cantidad);
-        // En un futuro: agregar al carrito acá
+        addItem(producto, cantidad);
+        setAgregado(true);
     };
 
     return (
@@ -17,8 +20,8 @@ const ItemDetail = ({ producto }) => {
             <p>Precio: ${producto.precio}</p>
 
             {
-                cantidadAgregada > 0
-                    ? <p>{cantidadAgregada} unidad/es seleccionadas.</p>
+                agregado
+                    ? <Link to="/cart" className="btn-ir-carrito">Ir al carrito</Link>
                     : <ItemCount stock={10} initial={1} onAdd={handleAdd} />
             }
         </div>

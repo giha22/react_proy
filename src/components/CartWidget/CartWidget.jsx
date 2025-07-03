@@ -1,12 +1,16 @@
-import React from 'react'
+import { useCart } from "../../context/CartContext";
 import carrito from '../../assets/carrito.png'
-import './CartWidget.css';
+import './cartwidget.css';
+
 
 function CartWidget() {
+
+    const { totalUnidades } = useCart();
+
     return (
     <div>
         <img className="carrito" src={carrito} alt="imagen de carrito" />
-        <span className='numero'>2</span>
+        {totalUnidades > 0 && <span className="numero">{totalUnidades}</span>}
     </div>
     )
 }

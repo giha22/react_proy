@@ -1,34 +1,41 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductos } from "../../data/Productos"; // ajustá la ruta
-import ItemList from "../ItemList/ItemList"; // componente que hace el map
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import ItemList from "../ItemList/ItemList";
 
 const ItemListContainer = () => {
+    const { categoriaId } = useParams();      // /productos/:categoriaId
     const [items, setItems] = useState([]);
-    const { categoriaId } = useParams();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const productos = await getProductos();
-                if (categoriaId) {
-                    setItems(productos.filter(p => p.categoria === categoriaId));
-                } else {
-                    setItems(productos);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
+        const db = getFirestore();
+        let productosRef = collection(db, "items");   // tu colección se llama "items"
 
-        fetchData();
+    // si hay categoría en la URL => filtramos
+    if (categoriaId) {
+        productosRef = query(productosRef, where("categoria", "==", categoriaId));
+    }
+
+    getDocs(productosRef)
+        .then((snapshot) => {
+            const productos = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            }));
+        setItems(productos);
+        })
+        .catch((e) => console.error("Error al traer productos", e))
+        .finally(() => setLoading(false));
     }, [categoriaId]);
 
+    if (loading) return <p style={{ textAlign: "center" }}>Cargando productos…</p>;
+
     return (
-        <div>
-            <h2>Catálogo</h2>
+        <section>
+            <h2 style={{ textAlign: "center" }}>Catálogo</h2>
             <ItemList productos={items} />
-        </div>
+        </section>
     );
 };
 

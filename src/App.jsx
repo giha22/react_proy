@@ -4,8 +4,12 @@ import ItemListContainer from './components/ItemListContainer/ItemListContainer.
 import ItemDetailContainer from "./components/ItemDetailContainer.jsx";
 import Layout from "./components/Layout.jsx";
 import Error404 from "./components/Error.jsx";
+import Cart from "./pages/cart.jsx";
+import Checkout from "./context/Checkout.jsx";
+import Agregar from "./components/Agregar.jsx";
 
 function App() {
+
 
   return (
     <>
@@ -17,11 +21,14 @@ function App() {
           <Route path="/productos/:categoriaId" element={<ItemListContainer />} />
           <Route path="/producto/:id" element={<ItemDetailContainer />} />
           <Route path="*" element={<Error404 />} /> 
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} /> 
         </Route>
+        
       </Routes>
 
     </BrowserRouter>
-
+    {/*<Agregar />*/} 
     </> 
   )
 }
