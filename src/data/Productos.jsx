@@ -1,3 +1,5 @@
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+
 const productos = [
     {
         id: "1",
@@ -128,19 +130,15 @@ const productos = [
     }
 ];
 
-export const getProductos = () => {
-    return new Promise((resolve) => {
-        setTimeout(() => resolve(productos), 1000);
-    });
-};
+export const getProductoPorId = async (id) => {
+    const db = getFirestore();
+    const ref = doc(db, "items", id);
+    const snapshot = await getDoc(ref);
 
-export const getProductoPorId = (id) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const prod = productos.find(p => p.id === id);
-            prod ? resolve(prod) : reject("Producto no encontrado");
-        }, 1000);
-    });
+    if (snapshot.exists()) {
+        return { id: snapshot.id, ...snapshot.data() };
+    } else {
+        throw new Error("Producto no encontrado");
+    }
 };
-
 export default productos;

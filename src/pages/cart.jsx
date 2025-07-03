@@ -13,19 +13,22 @@ const Cart = () => {
         );
 
     return (
-        <div className="cart-page">
-            {cart.map((prod) => (
-                <div key={prod.id} className="cart-item">
-                    <img src={prod.imagen} alt={prod.nombre} />
-                    <p>{prod.nombre}</p>
-                    <p>{prod.cantidad} u.</p>
-                    <p>${prod.precio * prod.cantidad}</p>
-                    <button onClick={() => removeItem(prod.id)}>X</button>
+        <div>
+            <h2>Tu carrito</h2>
+            {cart.map((item) => (
+                <div key={item.id}>
+                    <h4>{item.nombre}</h4>
+                    <p>Cantidad: {item.cantidad}</p>
+                    <p>Subtotal: ${item.cantidad * item.precio}</p>
+                    <button onClick={() => removeItem(item.id)}>Eliminar</button>
                 </div>
             ))}
-            <h3>Total: ${totalAPagar}</h3>
+            <h3>Total a pagar: ${totalAPagar}</h3>
             <button onClick={clearCart}>Vaciar carrito</button>
-            <Link to="/checkout" className="btn-checkout">Finalizar compra</Link>
+            <br />
+            <Link to="/checkout">
+                <button>Finalizar compra</button>
+            </Link>
         </div>
     );
 };
